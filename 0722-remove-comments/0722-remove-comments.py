@@ -2,7 +2,10 @@ class Solution:
     def removeComments(self, source: List[str]) -> List[str]:
         ans = []
         
+        # hold non comment part of line
         curBody = ""
+        
+        # keep track of block comment part of the line
         isInBlock = False
         
         for line in source:
@@ -38,6 +41,8 @@ class Solution:
                     else:
                         i += 2
              
+            # check if the line in is in block comment
+            # and if not add non comment part of the line or curBody to ans list 
             if isInBlock == False:
                 if len(curBody) > 0:
                     ans.append(curBody)
