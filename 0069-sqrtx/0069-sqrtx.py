@@ -1,11 +1,23 @@
 class Solution:
     def mySqrt(self, x: int) -> int:
-        for num in range(x+1):  
-            if num*num == x:
-                return num
-            elif num*num < x:
-                curNum = num
-            else:
-                return curNum
+        left, right = 0, x
+        
+        while left <= right:
+            mid = left + (right-left)//2
             
-        return 0
+            if mid**2 == x:
+                return mid
+            
+            elif mid**2 < x and right-left > 1:
+                left = mid
+                
+            elif mid**2 > x and right-left > 1:
+                right = mid
+                
+            else:
+                if right ** 2 > x:
+                    return left
+                else:
+                    return right
+                
+            
