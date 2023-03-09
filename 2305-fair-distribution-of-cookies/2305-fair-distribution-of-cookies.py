@@ -3,6 +3,7 @@ class Solution:
         self.res = float(inf)
         self.cur = [0] * k
         
+        cookies.sort(reverse=True)
         
         def backtrack(cur, index):
             if index == len(cookies):
