@@ -5,11 +5,10 @@
 #         self.left = None
 #         self.right = None
 
-class Solution:
-    def __init(self):
-        self.resNode = TreeNode()
+class Solution: 
     
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        self.resNode = TreeNode()
         def commonAncestor(node):
             if node:
                 if node.val < p.val and node.val < q.val:
