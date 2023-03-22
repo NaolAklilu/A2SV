@@ -1,70 +1,32 @@
 class Solution:
-    def sortArray(self, nums: List[int]) -> List[int]:        
-        negatives = []
-        positives = []
-        for num in nums:
-            if num < 0:
-                negatives.append(abs(num))
-            else:
-                positives.append(num)
+    def sortArray(self, nums: List[int]) -> List[int]:
         
-        if len(positives) > 0:
-            digits = len(str(max(positives)))
-            for digit in range(digits):
-                freq = [0]*10
-                # find the frequency of each digit
-                for num in positives:
-                    mod = num // (10**digit)
-                    mod %= 10
-                    freq[mod] += 1
-
-                # frequency list prefix sum
-                for i in range(1,10):
-                    freq[i] += freq[i-1]
-
-                tempNums = [0]*len(positives)
-                for i in range(len(positives)-1, -1, -1):
-                    num = positives[i]
-                    div = num // (10**digit)
-                    div %= 10
-                    freq[div] -= 1
-                    tempNums[freq[div]] = num
-
-                positives = [val for val in tempNums]
+        def merge_sort(left, right):
+            if right == left:
+                return [nums[left]]
             
-            if len(negatives) > 0:
-                digits = len(str(max(negatives)))
-                for digit in range(digits):
-                    freq = [0]*10
-                    # find the frequency of each digit
-                    for num in negatives:
-                        mod = num // (10**digit)
-                        mod %= 10
-                        freq[mod] += 1
-
-                    # frequency list prefix sum
-                    for i in range(1,10):
-                        freq[i] += freq[i-1]
-
-                    tempNums = [0]*len(negatives)
-                    for i in range(len(negatives)-1, -1, -1):
-                        num = negatives[i]
-                        div = num // (10**digit)
-                        div %= 10
-                        freq[div] -= 1
-                        tempNums[freq[div]] = num
-
-                    negatives = [val for val in tempNums]
-                
-                negatives.reverse()
-                nums = [(-val) for val in negatives]
+            mid = left + (right-left)//2
+            left_half = merge_sort(left, mid)
+            right_half = merge_sort(mid+1, right)
             
-            if len(negatives) > 0:
-                nums.extend(positives)
-            else:
-                nums = [val for val in positives]
+            return merge(left_half, right_half)
+        
+        def merge(left_half, right_half):
+            ptr1, ptr2 = 0, 0
             
-        return nums
+            res = []
+            while ptr1 < len(left_half) and ptr2 < len(right_half):
+                if left_half[ptr1] <= right_half[ptr2]:
+                    res.append(left_half[ptr1])
+                    ptr1 += 1
+                else:
+                    res.append(right_half[ptr2])
+                    ptr2 += 1
                 
-                
+            res.extend(left_half[ptr1:])
+            res.extend(right_half[ptr2:])
+        
+            return res
+        
+        return merge_sort(0, len(nums)-1)
             
