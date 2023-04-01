@@ -9,13 +9,6 @@ class Solution:
         self.result = []
         
         def traversal(node, arr):
-            
-#             if not node:
-#                 if sum(arr) == targetSum:
-#                     # print(arr)
-#                     self.result.append(arr[:])
-                
-#                 return
                     
             if node:
                 arr.append(node.val)                
