@@ -6,18 +6,19 @@
 #         self.right = right
 class Solution:
     def sumOfLeftLeaves(self, root: Optional[TreeNode]) -> int:
-        self.total = 0
-        def dfs(node):           
+
+        def dfs(node):
+            total = 0
             if node:
                 if node.left:
                     if node.left.left == None and node.left.right == None:
-                        self.total += node.left.val
+                        total += node.left.val
                         
-                dfs(node.left)
-                dfs(node.right) 
+                total += dfs(node.left)
+                total += dfs(node.right) 
                 
-            return
+            return total
         
-        dfs(root)
+        totalSum = dfs(root)
         
-        return self.total
+        return totalSum
