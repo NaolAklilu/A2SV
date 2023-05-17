@@ -1,36 +1,41 @@
 class Solution:
     def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
-        dic = { i:i for i in range(n)}
+        rep = { i:i for i in range(n)}
+        size = { i:1 for i in range(n)}
         
         def find(x):
             node = x
-            parent = dic[x]
+            parent = rep[x]
             length = 0
             
-            while x != dic[x]:
-                parent = dic[x]
-                length += 1
-                x = dic[x]
+            while x != rep[x]:
+                parent = rep[x]
+                size[node] += 1
+                x = rep[x]
 
-            while node != dic[node]:
-                dic[node] = parent
-                node = dic[node]
+            while node != rep[node]:
+                rep[node] = parent
+                node = rep[node]
 
-            return parent, length
+            return parent
 
         def union(x, y):
-            xrep, xlen = find(x)
-            yrep, ylen = find(y)
+            xrep = find(x)
+            yrep = find(y)
             
-            if xlen > ylen:
-                dic[yrep] = xrep
-            else:
-                dic[xrep] = yrep
+            if xrep != yrep:
+                if size[x] > size[y]:
+                    rep[yrep] = xrep
+                    size[x] += size[y]
+                    size[y] = 0
+                else:
+                    rep[xrep] = yrep
+                    size[y] += size[x]
+                    size[x] = 0
 
         for left, right in edges:
             union(left,right)
         
-        
-        return find(source)[0] == find(destination)[0]
+        return find(source) == find(destination)
     
     
