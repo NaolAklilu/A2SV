@@ -5,15 +5,11 @@ class Solution:
         minimum = { node: float(inf) for node in range(1, n+1)}
         
         def find(node):
-            x = node
-            nodeParent = parent[x]
-            while parent[x] != x:
-                nodeParent = parent[x]
-                x = parent[x]
-                
-            while node != parent[node]:
-                parent[node] = nodeParent
-                node = parent[node]
+            if parent[node] == node:
+                return node
+            
+            nodeParent = find(parent[node])
+            parent[node] = nodeParent
                 
             return nodeParent
         
