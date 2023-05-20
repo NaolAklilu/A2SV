@@ -2,7 +2,7 @@ class Solution:
     def equationsPossible(self, equations: List[str]) -> bool:
         parent = {}
         size = {}
-        notEqual = set()
+        inEquality = set()
         equals = set()
         
         for equation in equations:
@@ -34,12 +34,12 @@ class Solution:
                     
         for equation in equations:
             if equation[1] == "!":
-                notEqual.add((equation[0], equation[3]))
+                inEquality.add((equation[0], equation[3]))
             else:
                 equals.add((equation[0], equation[3]))
                 union(equation[0], equation[3])
         
-        for node1, node2 in notEqual:
+        for node1, node2 in inEquality:
             if find(node1) == find(node2):
                 return False
             
