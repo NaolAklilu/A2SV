@@ -1,15 +1,15 @@
 class Solution:
-    
-    def __init__(self):
-        self.memory = defaultdict(int)
-    
     def fib(self, n: int) -> int:
+        
         if n <= 1:
-            self.memory[n] = n
-            return self.memory[n]
+            return n
         
-        self.memory[n] = self.fib(n-1) + self.fib(n-2)
+        dp = [0 for i in range(n+1)]
+        dp[0], dp[1] = 0 , 1
         
-        return self.memory[n]
+        for i in range(2, n+1):
+            dp[i] = dp[i-1] + dp[i-2]
+            
+        return dp[n]
     
     
