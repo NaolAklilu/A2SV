@@ -1,22 +1,18 @@
 class Solution:
     def tribonacci(self, n: int) -> int:
-        memo = defaultdict(int)
+        if n <= 2:
+            if n == 0:
+                return 0
+            return 1
         
-        def TribonNumber(num):
-            if num == 0:
-                memo[num] = num
-                return memo[num]
-            
-            elif num <= 2:
-                memo[num] = 1
-                return memo[num]
-            
-            if num not in memo:
-                memo[num] = TribonNumber(num-1) + TribonNumber(num-2) + TribonNumber(num-3)
-                
-            return memo[num]
+        dp = [0 for i in range(n+1)]
+        dp[0], dp[1], dp[2] = 0, 1, 1
         
-        return TribonNumber(n)
+        for i in range(3, n+1):
+            dp[i] = dp[i-1] + dp[i-2] + dp[i-3]
+            
+        return dp[n]
+        
                 
             
         
