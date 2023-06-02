@@ -1,27 +1,15 @@
 class Solution:
     def combinationSum4(self, nums: List[int], target: int) -> int:
         
-        memo = { i: float(inf) for i in range(target+1)}
+        memo = { i: 0 for i in range(1, target+1)}
         
-        def combination(curNum):
-            if curNum == 0:
-                return 1
-            
-            if curNum < -1:
-                return 0
-            
-            score = 0
+        for curTarget in range(1, target+1):
             for num in nums:
-                if (curNum-num) >= 0 and memo[(curNum-num)] != float(inf):
-                    score += memo[(curNum-num)]
-                
-                else:
-                    curValue = combination(curNum-num)
-                    if curValue != float(inf):
-                        score += curValue
-                        
-            memo[curNum] = score
-            
-            return memo[curNum]
+                if curTarget-num == 0:
+                    memo[curTarget] += 1
+                elif curTarget-num > 0:
+                    memo[curTarget] += memo[curTarget-num]
+                    
+        return memo[target]
         
-        return combination(target)
+        
