@@ -15,7 +15,7 @@ class Solution:
         
         distance = 0
         while queue:
-            distance += 1
+            distance += 1  
             curLength = len(queue)
             
             for _ in range(curLength):
