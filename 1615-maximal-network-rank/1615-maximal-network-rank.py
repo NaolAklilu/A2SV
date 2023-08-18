@@ -1,19 +1,20 @@
 class Solution:
     def maximalNetworkRank(self, n: int, roads: List[List[int]]) -> int:
-        graph = defaultdict(list)
+        roadPairs = defaultdict(set)
         
-        for source, destination in roads:
-            graph[source].append(destination)
-            graph[destination].append(source)
-            
-        maxLength = 0
-        for i in range(n):
-            for j in range(n):
-                if i == j:
-                    continue
-                elif i not in graph[j]:
-                    maxLength = max(maxLength, (len(graph[i]) + len(graph[j])))
-                else:
-                    maxLength = max(maxLength, (len(graph[i]) + len(graph[j]) - 1))
-                
-        return maxLength
+        for left, right in roads:
+            roadPairs[left].add(right)
+            roadPairs[right].add(left)
+        
+        maxCount = 0
+        for city1 in roadPairs:
+            for city2 in roadPairs:
+                if city1 != city2:
+                    len1 = len(roadPairs[city1])
+                    len2 = len(roadPairs[city2])
+                    if city1 in roadPairs[city2]:
+                        maxCount = max(maxCount, len1+len2-1)
+                    else:
+                        maxCount = max(maxCount, len1+len2)
+
+        return maxCount
