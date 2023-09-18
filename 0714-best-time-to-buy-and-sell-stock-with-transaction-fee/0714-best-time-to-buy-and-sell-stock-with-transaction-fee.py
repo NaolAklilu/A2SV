@@ -1,26 +1,25 @@
 class Solution:
     def maxProfit(self, prices: List[int], fee: int) -> int:
-        # Top-Down approach        
-        memo = defaultdict(int)
+        # Bottom-Up approach
         
-        def dp(pos, bought):
-            if pos == len(prices):
-                return 0
-            
-            if (pos, bought) in memo:
-                return memo[(pos, bought)]
-            
-            max_price = 0
-            if not bought:
-                max_price = max(max_price, dp(pos+1, True)-prices[pos]-fee)
-            else:
-                max_price = max(max_price, dp(pos+1, False) + prices[pos])
+        dp = [[0,0] for _ in range(len(prices)+1)]
+        
+        for pos in reversed(range(len(prices))):
+            for bought in [True, False]:
+                max_profit = 0
                 
-            max_price = max(max_price, dp(pos+1, bought))
+                if not bought:
+                    max_profit = max(max_profit, dp[pos+1][True] - prices[pos] - fee)
+                else:
+                    max_profit = max(max_profit, dp[pos+1][False] + prices[pos])
+                
+                max_profit = max(max_profit, dp[pos+1][bought])
+                
+                dp[pos][bought] = max_profit
+
+        
+        return dp[0][False]
             
-            memo[(pos, bought)] = max_price
-            return max_price
-            
-        return dp(0, False)
+        
                 
             
