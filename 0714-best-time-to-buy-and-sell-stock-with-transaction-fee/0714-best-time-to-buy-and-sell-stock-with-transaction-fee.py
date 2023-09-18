@@ -1,13 +1,21 @@
 class Solution:
     def maxProfit(self, prices: List[int], fee: int) -> int:
-        n = len(prices)
-        buy = [0] * n
-        sell = [0] * n
-        
-        buy[0] = -prices[0]
-        
-        for i in range(1, n):
-            buy[i] = max(buy[i-1], sell[i-1]-prices[i])
-            sell[i] = max(sell[i-1], buy[i-1]+prices[i]-fee)
+        # Top-Down approach
+        @lru_cache(None)  # Does caching which avoid repeated computation
+        def dp(pos, bought):
+            if pos == len(prices):
+                return 0
             
-        return sell[-1]
+            max_price = 0
+            if not bought:
+                max_price = max(max_price, dp(pos+1, True)-prices[pos]-fee)
+            else:
+                max_price = max(max_price, dp(pos+1, False) + prices[pos])
+                
+            max_price = max(max_price, dp(pos+1, bought))
+            
+            return max_price
+            
+        return dp(0, False)
+                
+            
