@@ -2,7 +2,7 @@ class TrieNode:
     def __init__(self, val):
         self.val = val
         self.is_end = False
-        self.children = [None for _ in range(26)]
+        self.children = {}
 
 class Trie:
 
@@ -12,31 +12,29 @@ class Trie:
     def insert(self, word: str) -> None:
         cur = self.root
         for i in range(len(word)):
-            index = ord(word[i])-ord('a')
-            if cur.children[index] == None:
+            char = word[i]
+            if char not in cur.children:
+                newNode = TrieNode(char)
                 if i == len(word)-1:
-                    newNode = TrieNode(word[i])
                     newNode.is_end = True
-                    cur.children[index] = newNode
-                else:
-                    cur.children[index] = TrieNode(word[i])
+                cur.children[char] = newNode
             else:
-                if i == len(word) - 1:
-                    curNode = cur.children[index]
+                if i == len(word)-1:
+                    curNode = cur.children[char]
                     curNode.is_end = True
-            
-            cur = cur.children[index] 
-            
+        
+            cur = cur.children[char]
 
     def search(self, word: str) -> bool:
         cur = self.root
-        for char in word:
-            index = ord(char) - ord('a')
-                        
-            if cur.children[index] == None:
+        
+        for i in range(len(word)):
+            char = word[i]
+            
+            if char not in cur.children:
                 return False
             
-            cur = cur.children[index]
+            cur = cur.children[char]
             
         if cur.is_end == False:
             return False
@@ -46,13 +44,13 @@ class Trie:
 
     def startsWith(self, prefix: str) -> bool:
         cur = self.root
-        for char in prefix:
-            index = ord(char)-ord('a')
+        for i in range(len(prefix)):
+            char = prefix[i]
             
-            if cur.children[index] == None:
+            if char not in cur.children:
                 return False
             
-            cur = cur.children[index]
+            cur = cur.children[char]
         
         return True
 
