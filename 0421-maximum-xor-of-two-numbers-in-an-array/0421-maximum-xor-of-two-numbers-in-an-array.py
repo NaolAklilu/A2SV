@@ -1,9 +1,3 @@
-# class TrieNode:
-#     def __init__(self, val):
-#         self.val = val
-#         self.children = {}
-#         self.num = -1
-
 class Solution:
     def __init__(self):
         self.root = {}
