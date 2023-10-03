@@ -12,25 +12,26 @@ class Solution:
         time = 0
         
         while queue:
-            queue.sort()
-            queue.reverse()
-            val, (rw, cl) = queue.pop()
-            
-            visited.add((rw, cl))
+            val, (row, col) = heappop(queue)
+            visited.add((row, col))
             
             time = max(time, val)
             
-            if rw == n-1 and cl==n-1:
+            if row == n-1 and col == n-1:
                 break
-            
-            for row, col in directions:
+                
+            for rw, cl in directions:
                 curRow = rw + row
                 curCol = cl + col
                 
                 if inBound(curRow, curCol) and (curRow, curCol) not in visited:
-                    queue.append([grid[curRow][curCol], (curRow, curCol)])
-                        
+                    heappush(queue, [grid[curRow][curCol], (curRow, curCol)])
+                
         return time
+            
+            
+        
+        
                         
                 
                 
