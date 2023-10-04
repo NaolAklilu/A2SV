@@ -1,37 +1,31 @@
 class Solution:
     def checkIfPrerequisite(self, numCourses: int, prerequisites: List[List[int]], queries: List[List[int]]) -> List[bool]:
         
-        course_pre = defaultdict(list)
-        indegree = defaultdict(int)
-        allPrerequisites = defaultdict(set)
+        graph = defaultdict(list)
+        isReachable = [[False for _ in range(numCourses)] for _ in range(numCourses)]
         
         for pre, course in prerequisites:
-            course_pre[pre].append(course)
-            allPrerequisites[course].add(pre)
-            indegree[course] += 1
+            graph[course].append(pre)
+        
+        def bfs(index):
+            queue = deque()
+            queue.append(index)
+            visited = set()
             
-        queue = deque()
-        for course in range(numCourses):
-            if indegree[course] == 0:
-                queue.append(course)
-            
-        while queue:
-            pre = queue.popleft()
-            
-            for course in course_pre[pre]:
-                indegree[course] -= 1
-                allPrerequisites[course].update(allPrerequisites[pre])
+            while queue:
+                course = queue.popleft()
+                isReachable[index][course] = True
+                visited.add(course)
                 
-                if indegree[course] == 0:
-                    queue.append(course)
-
+                for pre in graph[course]:
+                    if pre not in visited:
+                        queue.append(pre)
+                        
+        for i in range(numCourses):
+            bfs(i)
+        
         result = []
-        for query in queries:
-            if query[0] in allPrerequisites[query[1]]:
-                result.append(True)
-            else:
-                result.append(False)
-        
+        for pre, course in queries:
+            result.append(isReachable[course][pre])
+            
         return result
-                
-        
