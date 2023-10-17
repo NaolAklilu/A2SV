@@ -1,31 +1,24 @@
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        memo = defaultdict(int)
-          
-        def find(amount):
-            best = float(inf)
-            
-            if amount == 0:
-                return 0
-            
-            if amount < 0:
-                return best
-            
-            for coin in coins:
-                if (amount-coin) in memo:
-                    best = min(best, memo[amount-coin])
-                else:
-                    best = min(best, find(amount-coin))
-                    
-            memo[amount] = best+1
-                
-            return memo[amount]
         
-        result = find(amount)
-        if result == float(inf):
+        @cache
+        def dp(index, curAmount):
+            
+            if index == len(coins):
+                if curAmount == 0:
+                    return 0            
+                return float('inf')
+            
+            notTake = 0 + dp(index+1, curAmount)
+            
+            take = float('inf')
+            if coins[index] <= curAmount:
+                take = 1 + dp(index, curAmount - coins[index])
+            
+            return min(notTake, take)
+        
+        result = dp(0, amount)
+        if result == float('inf'):
             return -1
         return result
-
-
             
-        
