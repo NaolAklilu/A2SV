@@ -1,19 +1,27 @@
 class Solution:
     def mincostTickets(self, days: List[int], costs: List[int]) -> int:
-        dp = [0] * 366
+        
+        endDay = max(days)
+        memo = defaultdict(int)
+        memo[0] = 0
         
         for day in days:
-            dp[day] = 1
-            
-        for i in range(1, days[len(days)-1]+1):
-            if dp[i] == 0:
-                dp[i] = dp[i-1]
-                continue
-                
-            curCost = dp[i-1] + costs[0]
-            curCost = min(curCost, dp[max(0, i - 7)] + costs[1])
-            curCost = min(curCost, dp[max(0, i - 30)] + costs[2])
-
-            dp[i] = curCost
+            memo[day] = 1
         
-        return dp[days[len(days) - 1]];
+        @cache
+        def dp(day):
+            if day == 0:
+                return memo[0]
+            
+            if memo[day] == 0:
+                memo[day] = dp(max(0, day-1))
+            
+            else:
+                oneDay = dp(max(0, day-1)) + costs[0]
+                oneWeek = dp(max(0, day - 7)) + costs[1]
+                oneMonth = dp(max(0, day - 30)) + costs[2]
+                memo[day] = min(oneDay, oneWeek, oneMonth)
+            return memo[day]
+        
+        result = dp(endDay)
+        return result
