@@ -1,49 +1,44 @@
 class Solution:
     def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
         parent = defaultdict(str)
-        owner = defaultdict(int)
         rank = defaultdict(int)
+        owner = defaultdict(int)
         
-        def find(node):
-            if parent[node] == node:
-                return node
-            parent[node] = find(parent[node])
-            return parent[node]
+        def find(email):
+            if email != parent[email]:
+                parent[email] = find(parent[email])
+            return parent[email]
         
-        def union(email1, email2):
-            email1Par = find(email1)
-            email2Par = find(email2)
+        def union(e1, e2):
+            p1, p2 = find(e1), find(e2)
             
-            if rank[email1Par] > rank[email2Par]:
-                parent[email2Par] = email1Par
-                rank[email1Par] += rank[email2Par]
-            else:
-                parent[email1Par] = email2Par
-                rank[email2Par] += rank[email1Par]
-                
-        
+            if p1 != p2:
+                if rank[p1] >= rank[p2]:
+                    parent[p2] = p1
+                    rank[p1] += rank[p2]
+                else:
+                    parent[p1] = p2
+                    rank[p2] += rank[p1]
+             
         for i in range(len(accounts)):
             for j in range(1, len(accounts[i])):
                 parent[accounts[i][j]] = accounts[i][j]
                 owner[accounts[i][j]] = i
                 rank[accounts[i][j]] = 1
-                
+        
         for i in range(len(accounts)):
             for j in range(1, len(accounts[i])-1):
                 union(accounts[i][j], accounts[i][j+1])
-             
-        parentChild = defaultdict(list)
-        for email in parent:
-            parentChild[find(email)].append(email)
-            
-        ans = []
-        for parent in parentChild:
-            curAccount = []
-            curAccount.append(accounts[owner[parent]][0])
-            curAccount.extend(sorted(parentChild[parent]))
-            ans.append(curAccount)
-                
-        return ans
         
-                
-                
+        parentChildren = defaultdict(list)
+        for email in parent:
+            parentChildren[find(email)].append(email)
+            
+        results = []
+        for email in parentChildren:
+            curPerson = [accounts[owner[email]][0]]
+            curPerson.extend(sorted(parentChildren[email]))
+            results.append(curPerson)
+            
+        return results
+        
