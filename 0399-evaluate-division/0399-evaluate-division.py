@@ -1,22 +1,20 @@
 class Solution:
     def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
-        graph = {}
+        graph = defaultdict(int)
         nodes = set()
-        for i in range(len(equations)):
-            dividend, divisor = equations[i]
+        
+        for index, (dividend, divisor) in enumerate(equations):
             nodes.add(dividend)
             nodes.add(divisor)
-            graph[(dividend, divisor)] = values[i]
-            graph[(divisor, dividend)] = 1/values[i]
-            # graph[(dividend)].append((dividend, divisor, values[i]))
-            # graph[(divisor)].append((divisor, dividend, 1/values[i]))
-            
-        result = []
+            graph[(dividend, divisor)] = values[index]
+            graph[(divisor, dividend)] = 1 / values[index]
+        
+        results = []
         for dividend, divisor in queries:
             if dividend not in nodes or divisor not in nodes:
-                result.append(-1)
+                results.append(-1)
                 continue
-            
+                
             quotient = {}
             for node1, node2 in graph:
                 quotient[node1] = float('inf')
@@ -26,13 +24,16 @@ class Solution:
             for _ in range(len(graph)-1):
                 for u, v in graph:
                     quo = graph[(u, v)]
-                    if quotient[u]*quo < quotient[v]:
-                        quotient[v] = quotient[u]*quo
+                    if quo*quotient[u] < quotient[v]:
+                        quotient[v] = quo*quotient[u]
+                    
+            results.append(quotient[divisor])
             
-            result.append(quotient[divisor])
+        
+        for i in range(len(results)):
+            if results[i] == float('inf'):
+                results[i] = -1
+        
+        return results
             
-        for i in range(len(result)):
-            if result[i] == float('inf'):
-                result[i] = -1
-        return result
             
