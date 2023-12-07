@@ -1,30 +1,53 @@
 class Solution:
-    def findAllRecipes(self, recipes: List[str], ingredients: List[List[str]], supplies: List[str]) -> List[str]:
+    def findAllRecipes(self, recipes: List[str], ingredients: List[List[str]], supplies: List[str]) -> List[str]:        
         graph = defaultdict(list)
-        indegree = defaultdict(int)
-        queue = deque()
+        indegree = {}
         
-        for ingredient in supplies:
-            indegree[ingredient] = 0
-            queue.append(ingredient)
+        for item in supplies:
+            indegree[item] = 0
         
-        for i in range(len(ingredients)):
-            for ingredient in ingredients[i]:
-                graph[ingredient].append(recipes[i])
-                indegree[recipes[i]] += 1
-
-        recipes = set(recipes)
-        createdRecipe = []
-        while queue:
-            recipe = queue.popleft()
-            if recipe in recipes:
-                createdRecipe.append(recipe)
+        supplies = set(supplies)
+        for i in range(len(recipes)):
+            indegree[recipes[i]] = len(ingredients[i])
+        
+        for i in range(len(recipes)):
+            for ingre in ingredients[i]:
+                graph[ingre].append(recipes[i])
                 
-            for ingredient in graph[recipe]:
-                indegree[ingredient] -= 1
-                
-                if indegree[ingredient] == 0:
-                    queue.append(ingredient)
+                if ingre in supplies:
+                    indegree[ingre] = 0
+                else:
+                    if ingre in indegree:
+                        continue
+                    else:
+                        indegree[ingre] = float(inf)
             
-        return createdRecipe
+        queue = deque([])
+        created_recipes = set()
+        
+        for ingredient in indegree:
+            if indegree[ingredient] == 0:
+                queue.append(ingredient)
+            
+        while queue:
+            cur_ingredient = queue.popleft()
+            created_recipes.add(cur_ingredient)
+            
+            for neighbor in graph[cur_ingredient]:
+                indegree[neighbor] -= 1
+                
+                if indegree[neighbor] == 0:
+                    queue.append(neighbor)
+        
+        results = []
+        for recipe in recipes:
+            if recipe in created_recipes:
+                results.append(recipe)
+                
+        return results
+                
+            
+                
+                
+        
             
