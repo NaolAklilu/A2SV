@@ -1,11 +1,12 @@
 class TrieNode:
     def __init__(self):
         self.is_end = False
-        self.children = {}
+        self.children = [None] * 26
 
 class Trie:
 
     def __init__(self):
+        self.base = ord('a')
         self.root = TrieNode()
 
     def insert(self, word: str) -> None:
@@ -13,44 +14,40 @@ class Trie:
         
         for i in range(len(word)):
             char = word[i]
-            if char not in cur.children:
-                newNode = TrieNode()
-                
-                if i == len(word)-1:
-                    newNode.is_end = True
-                
-                cur.children[char] = newNode
-            else:
-                if i == len(word)-1:
-                    curNode = cur.children[char]
-                    curNode.is_end = True
+            index = ord(char) - self.base
             
-            cur = cur.children[char]
-
+            if not cur.children[index]:
+                newNode = TrieNode()
+                cur.children[index] = newNode
+                
+            cur = cur.children[index]
+        
+        cur.is_end = True
+                
     def search(self, word: str) -> bool:
         cur = self.root
         
         for char in word:
-            if char not in cur.children:
+            index = ord(char) - self.base
+            
+            if not cur.children[index]:
                 return False
             
-            cur = cur.children[char]
+            cur = cur.children[index]
         
-        if cur.is_end == False:
-            return False
-        
-        return True
-        
+        return cur.is_end
 
     def startsWith(self, prefix: str) -> bool:
         cur = self.root
         
         for char in prefix:
-            if char not in cur.children:
+            index = ord(char) - self.base
+            
+            if cur.children[index] == None:
                 return False
             
-            cur = cur.children[char]
-        
+            cur = cur.children[index]
+            
         return True
 
 
