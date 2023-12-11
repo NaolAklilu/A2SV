@@ -4,13 +4,15 @@ class Solution:
         order = [] 
         
         def topSort(node, colors, order):
-            if colors[node] == 1:
-                return False
             colors[node] = 1
+            
             for neighbor in graph[node]:
-                if colors[neighbor] == 2:
+                if colors[neighbor] == 0:
+                    if not topSort(neighbor, colors, order):
+                        return False
+                elif colors[neighbor] == 2:
                     continue
-                if not topSort(neighbor, colors, order):
+                else:
                     return False
             
             colors[node] = 2
@@ -24,6 +26,3 @@ class Solution:
             topSort(node, colors, order)
                 
         return sorted(order)
-            
-            
-        
