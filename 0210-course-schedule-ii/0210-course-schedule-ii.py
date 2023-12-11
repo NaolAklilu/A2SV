@@ -1,34 +1,30 @@
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
         graph = defaultdict(list)
-        colors = [0 for _ in range(numCourses)]
+        indegree = [0 for _ in range(numCourses)]
         orders = []
         
-        for course, req in prerequisites:
-            graph[req].append(course)
+        for course, pre in prerequisites:
+            graph[pre].append(course)
+            indegree[course] += 1
             
-        def dfs(course):
-            colors[course] = 1
-            
-            for pre in graph[course]:
-                if colors[pre] == 2:
-                    continue
-                elif colors[pre] == 1:
-                    return False
-                else:
-                    if not dfs(pre):
-                        return False
-                    
-            orders.append(course)
-            colors[course] = 2
-            return True
-        
+        queue = deque()
         for course in range(numCourses):
-            if colors[course] == 0:
-                if not dfs(course):
-                    return []
+            if indegree[course] == 0:
+                queue.append(course)
                 
+        while queue:
+            curCourse = queue.popleft()
+            orders.append(curCourse)
+            
+            for pre in graph[curCourse]:
+                indegree[pre] -= 1
+                
+                if indegree[pre] == 0:
+                    queue.append(pre)
+                    
         if len(orders) != numCourses:
             return []
-        return orders[::-1]
-                
+        return orders
+        
+        
