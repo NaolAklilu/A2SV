@@ -1,32 +1,29 @@
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        graph = defaultdict(list)
-        indegree = [0 for _ in range(numCourses)]
-        order = []
-        
-        for course, pre in prerequisites:
-            graph[pre].append(course)
-            indegree[course] += 1
-        
-        queue = deque()
-        for course in range(numCourses):
-            if indegree[course] == 0:
-                queue.append(course)
-        
-        while queue:
-            curCourse = queue.popleft()
-            order.append(curCourse)
-            
-            for neighbor in graph[curCourse]:
-                indegree[neighbor] -= 1
-                
-                if indegree[neighbor] == 0:
-                    queue.append(neighbor)
-                
-        if len(order) != numCourses:
+       
+        graph = [[] for _ in range(numCourses)]
+        visited = [0 for _ in range(numCourses)]
+
+        for pair in prerequisites:
+            x, y = pair
+            graph[x].append(y)
+
+        def is_cyclic(v, visited, stack):
+            visited[v] = 1
+            stack[v] = 1
+
+            for neighbor in graph[v]:
+                if visited[neighbor] == 0 and is_cyclic(neighbor, visited, stack) == True:
+                    return True
+                elif stack[neighbor] == 1:
+                    return True
+
+            stack[v] = 0
             return False
+
+        for v in range(numCourses):
+            if visited[v] == 0:
+                if is_cyclic(v, visited, [0]*numCourses) == True:
+                    return False
+
         return True
-    
-    
-        
-        
