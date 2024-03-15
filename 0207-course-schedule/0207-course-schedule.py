@@ -1,29 +1,25 @@
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-       
+      
         graph = [[] for _ in range(numCourses)]
-        visited = [0 for _ in range(numCourses)]
+        visit = [0 for _ in range(numCourses)]
 
-        for pair in prerequisites:
-            x, y = pair
+        for x, y in prerequisites:
             graph[x].append(y)
 
-        def is_cyclic(v, visited, stack):
-            visited[v] = 1
-            stack[v] = 1
-
-            for neighbor in graph[v]:
-                if visited[neighbor] == 0 and is_cyclic(neighbor, visited, stack) == True:
-                    return True
-                elif stack[neighbor] == 1:
-                    return True
-
-            stack[v] = 0
-            return False
-
-        for v in range(numCourses):
-            if visited[v] == 0:
-                if is_cyclic(v, visited, [0]*numCourses) == True:
+        def dfs(i):
+            if visit[i] == -1:
+                return False
+            if visit[i] == 1:
+                return True
+            visit[i] = -1
+            for j in graph[i]:
+                if not dfs(j):
                     return False
+            visit[i] = 1
+            return True
 
+        for i in range(numCourses):
+            if not dfs(i):
+                return False
         return True
