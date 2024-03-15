@@ -1,18 +1,20 @@
 class Solution:
     def findCircleNum(self, isConnected: List[List[int]]) -> int:
         
-        def dfs(node):
-            for nei, val in enumerate(isConnected[node]):
-                if val and nei not in visited:
-                    visited.add(nei)
-                    dfs(nei)
-
         n = len(isConnected)
-        visited = set()
-        provinces = 0
+        parent = list(range(n))
+        
+        def find(x):
+            if x != parent[x]:
+                parent[x] = find(parent[x])
+            return parent[x]
+        
+        def union(x, y):
+            parent[find(x)] = find(y)
+        
         for i in range(n):
-            if i not in visited:
-                visited.add(i)
-                dfs(i)
-                provinces += 1
-        return provinces
+            for j in range(i+1, n):
+                if isConnected[i][j]:
+                    union(i, j)
+        
+        return len(set(find(x) for x in range(n)))
