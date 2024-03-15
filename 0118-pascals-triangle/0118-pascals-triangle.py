@@ -1,12 +1,12 @@
 class Solution:
     def generate(self, numRows: int) -> List[List[int]]:
-      
+   
         result = []
         for i in range(numRows):
-            row = [1]
-            if result:
-                last_row = result[-1]
-                row.extend([sum(pair) for pair in zip(last_row, last_row[1:])])
-                row.append(1)
-            result.append(row)
+            temp = [0 for _ in range(i+1)]
+            temp[0] = 1
+            temp[-1] = 1
+            for j in range(1, len(temp)-1):
+                temp[j] = result[-1][j-1] + result[-1][j]
+            result.append(temp)
         return result
