@@ -1,26 +1,17 @@
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
-        results = []
-        
-        def dp(index, curAmount, curNums):
-            curNums = curNums[:]
-            if index == len(candidates):
-                if curAmount == 0:
-                    if curNums not in results:
-                        results.append(curNums)
-                        
+      
+        def backtrack(remain, comb, start):
+            if remain == 0:
+                result.append(list(comb))
                 return
-            
-            notTake = dp(index+1, curAmount, curNums)
-            if candidates[index] <= curAmount:
-                curNums.append(candidates[index])
-                dp(index, curAmount-candidates[index], curNums)
-                curNums.pop()
-            
-            return 
-        
-        dp(0, target, [])
-        
-        return results
-                
-            
+            elif remain < 0:
+                return
+            for i in range(start, len(candidates)):
+                comb.append(candidates[i])
+                backtrack(remain - candidates[i], comb, i)
+                comb.pop()
+
+        result = []
+        backtrack(target, [], 0)
+        return result
