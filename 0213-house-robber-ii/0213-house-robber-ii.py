@@ -1,34 +1,26 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        memo = defaultdict(int)
-        length = len(nums)    
-            
-        if len(nums) <= 3:
-            return max(nums)
-        
-        def dp(n):
-            if n == 0:
-                memo[n] = nums[n]
-                return memo[n]
-            
-            elif n == 1:
-                memo[n] = max(nums[0], nums[1])
-                return memo[n] 
-            
-            if n not in memo:
-                memo[n] = max(dp(n-1), dp(n-2) + nums[n])
-                       
-            return memo[n]
-        
-        end = nums[-1]
-        nums.pop()
-        right = dp(len(nums)-1)
-        nums.pop(0)
-        nums.append(end)
-        memo.clear()
-        left = dp(len(nums)-1)
-                           
-        return max(left, right)
-        
-                           
-        
+
+        if not nums:
+            return 0
+
+        if len(nums) == 1:
+            return nums[0]
+
+        def rob_helper(nums):
+            if not nums:
+                return 0
+
+            if len(nums) == 1:
+                return nums[0]
+
+            dp = [0]*len(nums)
+            dp[0] = nums[0]
+            dp[1] = max(nums[0], nums[1])
+
+            for i in range(2, len(nums)):
+                dp[i] = max(dp[i-2] + nums[i], dp[i-1])
+
+            return dp[-1]
+
+        return max(rob_helper(nums[:-1]), rob_helper(nums[1:]))
