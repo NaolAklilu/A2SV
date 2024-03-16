@@ -1,17 +1,14 @@
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
-      
-        def backtrack(remain, comb, start):
+
+        def dfs(start, path, remain):
             if remain == 0:
-                result.append(list(comb))
-                return
-            elif remain < 0:
+                result.append(path)
                 return
             for i in range(start, len(candidates)):
-                comb.append(candidates[i])
-                backtrack(remain - candidates[i], comb, i)
-                comb.pop()
+                if remain - candidates[i] >= 0:
+                    dfs(i, path + [candidates[i]], remain - candidates[i])
 
         result = []
-        backtrack(target, [], 0)
+        dfs(0, [], target)
         return result
