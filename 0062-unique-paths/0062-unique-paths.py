@@ -1,20 +1,10 @@
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
-        
-        memo = {}
-        
-        def factorial(num):
-            if num <= 1:
-                return 1
-            
-            if num not in memo:
-                memo[num] = num*factorial(num-1)
-            
-            return memo[num]
-        
-        total = m-1 + n-1
-        
-        return factorial(total)//(factorial(m-1)*factorial(n-1))
-        
-        
-        
+        dp = [[0 for _ in range(n)] for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                if i == 0 or j == 0:
+                    dp[i][j] = 1
+                else:
+                    dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        return dp[m-1][n-1]
