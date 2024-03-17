@@ -1,6 +1,7 @@
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-            # Count the frequency of each element in the array
+
+        # Count the frequency of each element in the array
         freq_counter = {}
         for num in nums:
             if num in freq_counter:
@@ -8,19 +9,24 @@ class Solution:
             else:
                 freq_counter[num] = 1
 
-        # Create a list of buckets to store elements based on their frequency
-        buckets = [[] for _ in range(len(nums) + 1)]
+        # Create a list of elements and their frequencies
+        elements = list(freq_counter.keys())
+        freqs = list(freq_counter.values())
 
-        # Add each element to its corresponding bucket
-        for num, freq in freq_counter.items():
-            buckets[freq].append(num)
+        # Create a hash table to store the frequencies of all elements
+        freq_table = {}
+        for i in range(len(elements)):
+            freq_table[elements[i]] = freqs[i]
 
-        # Get the k most frequent elements
+        # Use a heap to find the k most frequent elements
+        heap = []
+        for element, freq in freq_table.items():
+            heapq.heappush(heap, (freq, element))
+            if len(heap) > k:
+                heapq.heappop(heap)
+
+        # Return the k most frequent elements
         result = []
-        for i in range(len(buckets) - 1, -1, -1):
-            for num in buckets[i]:
-                result.append(num)
-                if len(result) == k:
-                    return result
-
+        while heap:
+            result.append(heapq.heappop(heap)[1])
         return result
