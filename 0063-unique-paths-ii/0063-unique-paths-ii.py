@@ -1,35 +1,19 @@
 class Solution:
     def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
-        directions = [(1, 0), (0, 1)]
-        nRows = len(obstacleGrid)
-        nCols= len(obstacleGrid[0])
-        visited = {}
-        
-        
-        def inBound(row, col):
-            return 0<=row<nRows and 0<=col<nCols
-        
-        def dfs(row, col):
-            if row == nRows-1 and col == nCols-1:
-                if obstacleGrid[row][col] == 1:
-                    return 0
-                
-                visited[(row, col)] = 1
-                return visited[(row, col)]
-            
-            if obstacleGrid[row][col] == 1:
-                visited[(row, col)] = 0
-                return visited[(row, col)]
-            
-            count = 0
-            for r, c in directions:
-                if inBound(r+row, c+col):
-                    if (r+row, c+col) not in visited:
-                        visited[(r+row, c+col)] = dfs(r+row, c+col)
-                    count += visited[(r+row, c+col)]
-                    
-            return count
-        
-        return dfs(0, 0)
-                
-            
+        m, n = len(obstacleGrid), len(obstacleGrid[0])
+        dp = [[0]*n for _ in range(m)]
+
+        for i in range(m):
+            for j in range(n):
+                if obstacleGrid[i][j] == 1:
+                    dp[i][j] = 0
+                elif i == 0 and j == 0:
+                    dp[i][j] = 1
+                elif i == 0:
+                    dp[i][j] = dp[i][j-1]
+                elif j == 0:
+                    dp[i][j] = dp[i-1][j]
+                else:
+                    dp[i][j] = dp[i-1][j] + dp[i][j-1]
+
+        return dp[-1][-1]
