@@ -2,21 +2,16 @@ class Solution:
     def canReach(self, arr: List[int], start: int) -> bool:
         n = len(arr)
         visited = [False] * n
-        queue = deque([start])
-        visited[start] = True
         
-        while queue:
-            node = queue.popleft()
+        def dfs(node):
+            if node < 0 or node >= n or visited[node]:
+                return False
             
             if arr[node] == 0:
                 return True
             
-            if node + arr[node] < n and not visited[node + arr[node]]:
-                queue.append(node + arr[node])
-                visited[node + arr[node]] = True
+            visited[node] = True
             
-            if node - arr[node] >= 0 and not visited[node - arr[node]]:
-                queue.append(node - arr[node])
-                visited[node - arr[node]] = True
+            return dfs(node + arr[node]) or dfs(node - arr[node])
         
-        return False
+        return dfs(start)
