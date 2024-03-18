@@ -1,12 +1,6 @@
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
-        dic = defaultdict(int)
-        
+        result = 0
         for num in nums:
-            dic[num] += 1
-            
-        for num in dic:
-            if dic[num] == 1:
-                return num
-            
-        
+            result ^= num
+        return result
