@@ -1,37 +1,19 @@
 class Solution:
     def swimInWater(self, grid: List[List[int]]) -> int:
         n = len(grid)
-        directions = [(-1, 0), (1, 0), (0, 1), (0, -1)]
-        
-        def inBound(row, col):
-            return 0<=row<len(grid[0]) and 0<=col<len(grid[0])
-        
-        visited = set()
-        queue = []
-        queue.append([grid[0][0], (0, 0)])
-        time = 0
-        
-        while queue:
-            val, (row, col) = heappop(queue)
-            visited.add((row, col))
-            
-            time = max(time, val)
-            
-            if row == n-1 and col == n-1:
-                break
-                
-            for rw, cl in directions:
-                curRow = rw + row
-                curCol = cl + col
-                
-                if inBound(curRow, curCol) and (curRow, curCol) not in visited:
-                    heappush(queue, [grid[curRow][curCol], (curRow, curCol)])
-                
-        return time
-            
-            
-        
-        
-                        
-                
-                
+        visited = [[float('inf')]*n for _ in range(n)]
+        heap = [(grid[0][0], 0, 0)]
+        visited[0][0] = grid[0][0]
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+        while heap:
+            t, x, y = heapq.heappop(heap)
+            if (x, y) == (n-1, n-1):
+                return t
+            for dx, dy in directions:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < n and 0 <= ny < n and visited[nx][ny] > max(t, grid[nx][ny]):
+                    visited[nx][ny] = max(t, grid[nx][ny])
+                    heapq.heappush(heap, (visited[nx][ny], nx, ny))
+
+        return visited[n-1][n-1]
