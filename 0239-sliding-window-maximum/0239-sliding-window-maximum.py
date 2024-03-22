@@ -3,18 +3,19 @@ class Solution:
         if not nums or k == 0:
             return []
 
-        queue = deque()
-        result = []
-        for i in range(len(nums)):
-            while queue and queue[0] < i - k + 1:
-                queue.popleft()
+        queue = []
+        output = []
 
-            while queue and nums[queue[-1]] < nums[i]:
+        for i in range(len(nums)):
+            while queue and queue[0][0] <= i - k:
+                queue.pop(0)
+
+            while queue and queue[-1][1] < nums[i]:
                 queue.pop()
 
-            queue.append(i)
+            queue.append([i, nums[i]])
 
             if i >= k - 1:
-                result.append(nums[queue[0]])
+                output.append(queue[0][1])
 
-        return result
+        return output
