@@ -3,19 +3,27 @@ class Solution:
         if not nums or k == 0:
             return []
 
-        queue = []
-        output = []
+        # Create a monotonic queue to store the indices of the numbers in the window
+        queue = deque()
 
+        # Initialize the result
+        result = []
+
+        # Iterate over the input array
         for i in range(len(nums)):
-            while queue and queue[0][0] <= i - k:
-                queue.pop(0)
+            # Remove any elements from the queue that are outside the current window
+            while queue and queue[0] < i - k + 1:
+                queue.popleft()
 
-            while queue and queue[-1][1] < nums[i]:
+            # Remove any elements from the queue that are smaller than the current number
+            while queue and nums[queue[-1]] < nums[i]:
                 queue.pop()
 
-            queue.append([i, nums[i]])
+            # Add the current index to the queue
+            queue.append(i)
 
+            # If the current window is of size k, add the maximum number in the window to the result
             if i >= k - 1:
-                output.append(queue[0][1])
+                result.append(nums[queue[0]])
 
-        return output
+        return result
