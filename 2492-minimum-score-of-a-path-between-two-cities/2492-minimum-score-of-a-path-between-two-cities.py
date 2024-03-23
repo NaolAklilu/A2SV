@@ -10,26 +10,24 @@ class Solution:
             
             nodeParent = find(parent[node])
             parent[node] = nodeParent
-                
-            return nodeParent
+            
+            return parent[node]
+        
         
         def union(node1, node2, cost):
-            node1Rep = find(node1) 
+            node1Rep = find(node1)
             node2Rep = find(node2)
             size1 = size[node1Rep]
             size2 = size[node2Rep]
-            
+
             if size1 >= size2:
                 parent[node2Rep] = node1Rep
                 size[node1Rep] += size2
-                size[node2Rep] 
-                minimum[node1Rep] = min(cost, min(minimum[node1Rep], minimum[node2Rep]))
-
+                minimum[node1Rep] = min(cost, minimum[node1Rep], minimum[node2Rep])
             else:
                 parent[node1Rep] = node2Rep
                 size[node2Rep] += size1
-                size[node1Rep] = 1
-                minimum[node2Rep] = min(cost, min(minimum[node1Rep], minimum[node2Rep]))
+                minimum[node2Rep] = min(cost, minimum[node1Rep], minimum[node2Rep])
 
             
         for edge in roads:
