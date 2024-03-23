@@ -6,22 +6,19 @@ class Solution(object):
         :type k: int
         :rtype: List[List[int]]
         """
+        heap =[]
+        n = len(nums1)
+        m = len(nums2)
         
-        if not nums1 or not nums2:
-            return []
-
-        heap = []
-        for i in range(len(nums1)):
-            # we add the pair (nums1[i] + nums2[0], i, 0) into the heap
-            heapq.heappush(heap, [nums1[i] + nums2[0], i, 0])
-
-        # take the smallest (top) element from the heap
-        res = []
-        while len(res) < k and heap:
-            _, i, j = heapq.heappop(heap)
-            res.append([nums1[i], nums2[j]])
-            if j + 1 < len(nums2):
-                # we add the pair (nums1[i] + nums2[j+1], i, j+1) into the heap
-                heapq.heappush(heap, [nums1[i] + nums2[j+1], i, j+1])
-        return res
+        for i in range(m):
+            heappush(heap, [nums1[0]+nums2[i], 0, i])
+                
+        result = []  
         
+        for _ in range(min(k, n*m)):
+            total,left, right = heappop(heap)
+            result.append([nums1[left], nums2[right]])
+            if (left+1) < n:
+                heappush(heap, [nums1[left+1]+nums2[right], left+1, right])
+            
+        return result
