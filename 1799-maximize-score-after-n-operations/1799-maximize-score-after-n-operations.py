@@ -1,31 +1,29 @@
-import math
-
 class Solution:
     def maxScore(self, nums: List[int]) -> int:
+        memo = {}
         
-        @cache
-        def dp(nOperation, mask):
+        def dp(nOperation, numSet):
             if nOperation == len(nums)//2 +1:
                 return 0
             
+            if (nOperation, tuple(numSet)) in memo:
+                return memo[(nOperation, tuple(numSet))]
+            
             score = 0
             for i in range(len(nums)):
-                if (mask >> i) & 1:
+                if i in numSet:
                     continue
 
                 for j in range(i+1, len(nums)):
-                    if (mask >> j) & 1:
+                    if j in numSet:
                         continue
-                        
-                    curMask = (1 << i) | (1 << j) | mask
-                    curGcd = nOperation * math.gcd(nums[i], nums[j])
-                    
-                    curScore =curGcd  + dp(nOperation+1, curMask)
+                    curSet = numSet.copy()
+                    curSet.add(i)
+                    curSet.add(j)
+                    curScore = nOperation * math.gcd(nums[i], nums[j]) + dp(nOperation+1, curSet)
                     score = max(score, curScore)
                 
+            memo[(nOperation, tuple(numSet))] = score
             return score 
         
-        return dp(1, 0)
-                
-                        
-                    
+        return dp(1, set())
