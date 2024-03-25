@@ -1,16 +1,17 @@
 class Solution:
     def findRadius(self, houses: List[int], heaters: List[int]) -> int:
+        houses.sort()
         heaters.sort()
-        answer = 0
-
+        
+        curRadius = 0
+        
         for house in houses:
-            radius = float('inf')
-            le = bisect.bisect_right(heaters, house)
-            if le > 0:
-                radius = min(radius, house - heaters[le-1])
-            ge = bisect.bisect_left(heaters, house)
-            if ge < len(heaters):
-                radius = min(radius, heaters[ge] - house)
-            answer = max(answer, radius)
-
-        return answer
+            idx = bisect.bisect_left(heaters, house)
+            if idx == 0:
+                curRadius = max(curRadius, heaters[0] - house)
+            elif idx == len(heaters):
+                curRadius = max(curRadius, house - heaters[-1])
+            else:
+                curRadius = max(curRadius, min(house - heaters[idx - 1], heaters[idx] - house))
+        
+        return curRadius
