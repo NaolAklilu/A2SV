@@ -24,14 +24,14 @@ class Solution:
             return
            
         count = 0
-        for x in range(len(grid1)):
-            for y in range(len(grid1[0])):
-                if visited[x][y] == 0:
-                    if grid2[x][y] == 0:
-                        visited[x][y] = 1
+        for y in range(len(grid1)):
+            for x in range(len(grid1[0])):
+                if visited[y][x] == 0:
+                    if grid2[y][x] == 0:
+                        visited[y][x] = 1
                     else:
                         self.isExist = True
-                        dfs(x,y, visited)
+                        dfs(y,x, visited)
 
                         if self.isExist:
                             count += 1
