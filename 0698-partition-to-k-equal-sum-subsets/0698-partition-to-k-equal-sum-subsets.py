@@ -1,28 +1,27 @@
 class Solution:
     def canPartitionKSubsets(self, nums: List[int], k: int) -> bool:
-        def search(groups):
+        total = sum(nums)
+        if total % k != 0:
+            return False
+        target = total // k
+        nums.sort(reverse=True)
+        if nums[0] > target:
+            return False
+
+        def dfs(groups):
             if not nums:
                 return True
-            v = nums[-1]
+            v = nums[0]
             for i, group in enumerate(groups):
                 if group + v <= target:
-                    nums.pop()
+                    nums.pop(0)
                     groups[i] += v
-                    if search(groups):
+                    if dfs(groups):
                         return True
-                    nums.append(v)
+                    nums.insert(0, v)
                     groups[i] -= v
                 if not group:
                     break
             return False
 
-        nums.sort()
-        if sum(nums) % k:
-            return False
-        target = sum(nums) // k
-        if nums[-1] > target:
-            return False
-        while nums and nums[-1] == target:
-            nums.pop()
-            k -= 1
-        return search([0] * k)
+        return dfs([0] * k)
