@@ -7,41 +7,38 @@
 class Solution:
     def delNodes(self, root: Optional[TreeNode], to_delete: List[int]) -> List[TreeNode]:
         
-        nodes = set()
-        to_delete = set(to_delete)
-            
-        def recursion(node):
-            if node is None:
-                return None
-            
-            leftNode, rightNode = None, None
-            if node.left:
-                leftNode = recursion(node.left)
-                if leftNode == None:
-                    node.left = None
+        result = []
+        
+        def dfs(node, hasParent):
+            if node:
+                dfs(node.left, True)
+                dfs(node.right, True)
                 
-            if node.right:
-                rightNode = recursion(node.right)
-                if rightNode == None:
-                    node.right = None
+                if node.val in to_delete:
+                    if node.left:
+                        if node.left.val in to_delete:
+                            node.left = None
+                        else:
+                            result.append(node.left)
                     
+                    if node.right:
+                        if node.right.val in to_delete:
+                            node.right = None
+                        else:
+                            result.append(node.right)
+                else:
+                    if node.left:
+                        if node.left.val in to_delete:
+                            node.left = None
+                    
+                    if node.right:
+                        if node.right.val in to_delete:
+                            node.right = None
+                    
+                            
+                if hasParent == False and node.val not in to_delete:
+                    result.append(node)
+                    
+        dfs(root, False)
             
-            if node.val in to_delete:
-                if leftNode:
-                    nodes.add(leftNode)
-                
-                if rightNode:
-                    nodes.add(rightNode)
-                    
-                return None
-            
-            return node
-        
-        rootNode = recursion(root)
-        if rootNode:
-            nodes.add(rootNode)
-        
-        return list(nodes)
-        
-                    
-                    
+        return result
